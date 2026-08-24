@@ -51,12 +51,12 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 
 ## 6. Core: color palette
 
-- [ ] `TagPalette`
-  - [ ] `of(Map<String, TextColor> tags)` factory
-  - [ ] `resolver()` — `TagResolver` for the configured tags
-  - [ ] `miniMessage()` — `MiniMessage.builder().editTags(...).build()`
-  - [ ] `color(String tag)` accessor
-  - [ ] Unit tests: known tag resolves to configured color, unknown tag behavior defined and tested
+- [x] `TagPalette`
+  - [x] `of(Map<String, TextColor> tags)` factory
+  - [x] `resolver()` — `TagResolver` for the configured tags
+  - [x] `miniMessage()` — `MiniMessage.builder().editTags(...).build()`
+  - [x] `color(String tag)` accessor
+  - [x] Unit tests: known tag resolves to configured color, unknown tag behavior defined and tested (throws `IllegalArgumentException`)
 
 ## 7. Core: prefix splicing
 
