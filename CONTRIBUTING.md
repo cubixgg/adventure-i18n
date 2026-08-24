@@ -63,6 +63,10 @@ Conventional Commits type spelled out: `feature`, `fix`, `chore`, `docs`, `refac
 - Base branch: `main`. `main` only ever receives merged PRs, never a direct push.
 - One PR per roadmap section (or sensible chunk of one), not per item (see Workflow above).
 - Make sure `./gradlew build` passes before opening.
+- **Squash-merge only** — the repo's other merge methods are disabled. A regular merge commit's
+  auto-generated message repeats the PR title on its second line, which `release-please`'s
+  Conventional Commits parser would read as a second, duplicate changelog entry for the same change
+  (see [ADR-0005](./docs/decisions/0005-reposilite-release-please.md)).
 
 ## Testing
 

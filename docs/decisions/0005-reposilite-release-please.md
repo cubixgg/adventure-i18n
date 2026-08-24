@@ -59,11 +59,11 @@ guess at now.
   is checked.
 - `CHANGELOG.md` is not hand-seeded: release-please generates it itself from Conventional Commit
   history the first time it opens a release PR.
-- This repo currently allows all three GitHub merge methods (squash, merge commit, rebase). A regular
-  merge commit's auto-generated message repeats the PR title on its second line, which
-  release-please's Conventional Commits parser would read as a second, duplicate changelog entry for
-  the same change - `CONTRIBUTING.md` doesn't mandate squash-merge yet, so this is a known rough edge,
-  not something this change silently fixes by itself.
+- The repo's merge button is restricted to squash-merge only (merge commit and rebase-merge disabled)
+  as part of this change - a regular merge commit's auto-generated message repeats the PR title on
+  its second line, which release-please's Conventional Commits parser would read as a second,
+  duplicate changelog entry for the same change. `CONTRIBUTING.md`'s Pull requests section now says
+  so explicitly.
 - A snapshot-publishing pipeline, if ever added, needs a Reposilite retention policy decided first.
 
 ## References
