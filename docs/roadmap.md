@@ -63,29 +63,33 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 - [x] `PrefixPolicy` record — `templateKey`, `tag`, `of(String key, String tag)` factory
 - [x] Splice logic: substitute the prefix template's own translation textually before MiniMessage parses the surrounding message (`PrefixPolicy#splice(String, Map<String, String>)`)
 - [x] Guard against self-reference (prefix key itself containing its own tag) — a single, non-recursive substitution pass by construction; a leftover unresolved tag is left as-is rather than recursing
-- [ ] Make it optional on `KeyedTranslator`'s builder — deferred to section 8, once `KeyedTranslator` itself exists
+- [x] Make it optional on `KeyedTranslator`'s builder
 - [x] Unit tests: prefix present, prefix omitted, self-referencing prefix guarded
 
 ## 8. Core: translator assembly
 
-- [ ] `KeyedTranslator` implementing `MiniMessageTranslator`
-  - [ ] Builder: `builder(Key namespace)`
-  - [ ] `.source(LangSource)`
-  - [ ] `.fallback(Locale)` — validated against discovered bundles, `IllegalStateException` if missing
-  - [ ] `.fallbackStrategy(FallbackStrategy)` — optional, defaults to `LanguageVariantFallback`
-  - [ ] `.miniMessage(MiniMessage)` — optional, defaults to `MiniMessage.miniMessage()`
-  - [ ] `.prefix(PrefixPolicy)` — optional
-  - [ ] `.issues(TranslationIssueListener)` — optional, defaults to `logging()`
-  - [ ] `.build()`
-  - [ ] Thread-safety: lookups must be safe from tick and IO threads alike
-  - [ ] `register(Locale, Map<String,String>)` for runtime bundle extension (e.g. plugins adding their own keys), overwriting existing keys for that locale
-  - [ ] Unit tests: builder validation (missing fallback bundle fails fast), thread-safety smoke test, runtime `register` overwrite behavior
+- [x] `KeyedTranslator` extends `MiniMessageTranslator` (an abstract class since Adventure 4.20.0, not something to implement from scratch — see the spec.md correction made alongside this item; only `getMiniMessageString(key, locale)` and `name()` are overridden)
+  - [x] Builder: `builder(Key namespace)`
+  - [x] `.source(LangSource)`
+  - [x] `.fallback(Locale)` — validated against discovered bundles, `IllegalStateException` if missing
+  - [x] `.fallbackStrategy(FallbackStrategy)` — optional, defaults to `LanguageVariantFallback`
+  - [x] `.miniMessage(MiniMessage)` — optional, defaults to `MiniMessage.miniMessage()`
+  - [x] `.prefix(PrefixPolicy)` — optional
+  - [x] `.issues(TranslationIssueListener)` — optional, defaults to `logging()`
+  - [x] `.build()`
+  - [x] Thread-safety: lookups must be safe from tick and IO threads alike (`ConcurrentHashMap`-backed bundles)
+  - [x] `register(Locale, Map<String,String>)` for runtime bundle extension (e.g. plugins adding their own keys), overwriting existing keys for that locale
+  - [x] Unit tests: builder validation (missing fallback bundle fails fast), thread-safety smoke test, runtime `register` overwrite behavior
 
 ## 9. Core: translation issue reporting
 
-- [ ] `TranslationIssueListener` interface — seam for missing-key / fallback-served-key events
-- [ ] `LoggingTranslationIssueListener` — default implementation, deduplicated via SLF4J
-- [ ] Unit tests using a test double listener instead of scraping log output
+Implemented alongside section 8 rather than after it: `KeyedTranslator`'s builder needs a working
+`.issues(...)` default (`TranslationIssueListener.logging()`) to exist at all — see
+`CONTRIBUTING.md`'s "phase order is the recommended build/test order, not a strict dependency".
+
+- [x] `TranslationIssueListener` interface — seam for missing-key / fallback-served-key events
+- [x] `LoggingTranslationIssueListener` — default implementation, deduplicated via SLF4J
+- [x] Unit tests using a test double listener instead of scraping log output
 
 ## 10. Core: per-recipient locale override
 

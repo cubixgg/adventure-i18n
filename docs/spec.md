@@ -208,8 +208,28 @@ out.
 
 ### `KeyedTranslator`
 
-A `MiniMessageTranslator` implementation, thread-safe (lookups can happen from tick and IO threads
-alike), assembled via a builder instead of hardcoding a namespace and palette:
+`net.kyori.adventure.text.minimessage.translation.MiniMessageTranslator` (adventure-text-minimessage,
+available since Adventure 4.20.0 - well before the `5.2.0` this project pins) turns out to already be
+an **abstract class**, not something this library needs to build from scratch as originally sketched
+here. It has exactly one abstract hook:
+
+```java
+protected abstract @Nullable String getMiniMessageString(String key, Locale locale);
+```
+
+Its `final translate(TranslatableComponent, Locale)` already does everything else: calls that hook,
+deserializes the returned MiniMessage string with the `MiniMessage` instance passed to its
+constructor, resolves `<arg:0>`/named-argument tags via its own `Argument`/`TranslationArgument`
+mechanism, applies the component's fallback style, and appends its children. `KeyedTranslator`
+therefore `extends MiniMessageTranslator` and overrides just `getMiniMessageString(...)` (locale
+resolution via `FallbackStrategy`, prefix splicing, issue reporting) and `name()` (the configured
+`Key` namespace) - it is a thin adapter over an existing upstream mechanism, not a parser
+implementation of its own. This also means a custom `Args` class (see "`Messages` and `Args`" below)
+may turn out to be largely redundant with upstream's own `Argument` utility - flagged there, to be
+resolved when that item is actually implemented.
+
+Otherwise thread-safe (lookups can happen from tick and IO threads alike), assembled via a builder
+instead of hardcoding a namespace and palette:
 
 ```java
 Key namespace = Key.key("myproject", "i18n");
@@ -282,6 +302,15 @@ inserted verbatim, never parsed as MiniMessage, so player input (e.g. a display 
 inject colors or click events. Both are already fully platform- and project-independent and carry
 over into the library essentially unchanged; `Args` could optionally be renamed to `Placeholders` if
 that reads more clearly outside a Minecraft context.
+
+**Note found while implementing `KeyedTranslator` (see above):** upstream
+`net.kyori.adventure.text.minimessage.translation.Argument` (since Adventure 4.20.0/4.21.0) already
+provides exactly this - `Argument.bool(name, value)`, `.numeric(name, value)`, `.string(name, value)`
+(which wraps the value in `Component.text(...)`, i.e. already verbatim/never-parsed-as-MiniMessage),
+and `.component(name, value)` - designed specifically to be used as `Component.translatable(key,
+Argument.string("player", name), ...)` arguments for a `MiniMessageTranslator`. A custom `Args` class
+may turn out to be unnecessary, or reduce to a thin re-export - re-evaluate when this item is actually
+implemented rather than building a parallel mechanism upstream already ships.
 
 ## Validation / testability
 
