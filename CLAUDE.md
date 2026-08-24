@@ -114,4 +114,6 @@ rationale in `docs/spec.md`):
 - No YAML lang file format in v1 (only the `LangFileFormat` interface needs to allow for it later).
 - No Bukkit/Velocity/Minestom platform adapter classes in the library — `Messages.install` is
   already platform-neutral via `GlobalTranslator`; a platform adapter, if ever needed, is a separate
-  add-on module, not core.
+  add-on module, not core. `adventure-i18n-minestom-demo` doesn't contradict this: it's a runnable,
+  unpublished example server that *consumes* both published modules, not a library adapter class —
+  see its own `README.md`.

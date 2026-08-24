@@ -1,0 +1,6 @@
+{
+  "shop.title": "<info><bold>Demo Shop</bold></info> <muted>- try: <catalog></muted>",
+  "shop.buy.success": "<success>Bought <item> for <price> coins.</success> <muted>Balance: <balance></muted>",
+  "shop.buy.error": "<error>Not enough coins for <item> (costs <price>, you have <balance>).</error>",
+  "shop.unknown.item": "<error>Unknown item '<item>'.</error> <muted>Try: <catalog></muted>"
+}
