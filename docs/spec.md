@@ -152,18 +152,24 @@ a broken lang file should fail at boot, not surface as raw translation keys in f
 ### `FallbackStrategy`
 
 The actual locale resolution as a swappable object: exact locale → regional variant of the same
-language → fixed fallback locale → nothing found. Swappable so that a project can, for instance,
-plug in a pure fallback chain (`de_AT → de_DE → en_US`) without touching the translator itself:
+language → fixed fallback locale → nothing found. The designated fallback locale is a property of
+the translator's own configuration (`KeyedTranslator.builder().fallback(...)`, validated against
+the discovered bundles at build time), not of the strategy - so it's passed into `resolve(...)` as
+a parameter, keeping `FallbackStrategy` itself stateless and swappable. A project can, for
+instance, plug in a strategy with its own hardcoded fallback chain (`de_AT → de_DE → en_US`)
+without touching the translator itself:
 
 ```java
 public interface FallbackStrategy {
-    Optional<Locale> resolve(Locale requested, Set<Locale> available);
+    Optional<Locale> resolve(Locale requested, Locale fallback, Set<Locale> available);
 }
 ```
 
-`LanguageVariantFallback` is the default implementation with the behaviour described above; which
-regional variant represents a language is sorted explicitly (e.g. alphabetically, or via a priority
-list on the builder), never decided implicitly by read order.
+`LanguageVariantFallback` is the default implementation with the behaviour described above, and -
+exactly because the fallback locale is a `resolve(...)` parameter rather than its own state - is
+itself stateless and needs no constructor argument (`new LanguageVariantFallback()`). Which
+regional variant represents a language is sorted explicitly (alphabetically by
+`LocaleCodes.id(...)`), never decided implicitly by read order.
 
 ### `TagPalette`
 

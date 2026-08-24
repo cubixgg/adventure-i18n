@@ -43,11 +43,11 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 
 ## 5. Core: fallback resolution
 
-- [ ] `FallbackStrategy` interface — `Optional<Locale> resolve(Locale requested, Set<Locale> available)`
-- [ ] `LanguageVariantFallback` (default implementation)
-  - [ ] Order: exact locale → regional variant of same language → fixed fallback locale → empty
-  - [ ] Deterministic selection of "which regional variant represents a language" (e.g. alphabetical, or a priority list on the builder) — explicitly not dependent on scan/read order
-  - [ ] Unit tests: exact match, variant match (e.g. `de_AT` client, `de_DE` bundle), fallback-locale match, no match at all
+- [x] `FallbackStrategy` interface — `Optional<Locale> resolve(Locale requested, Locale fallback, Set<Locale> available)` (corrected from the original 2-arg sketch — see the spec.md fix made alongside this item)
+- [x] `LanguageVariantFallback` (default implementation, stateless — no constructor argument)
+  - [x] Order: exact locale → regional variant of same language → fixed fallback locale → empty
+  - [x] Deterministic selection of "which regional variant represents a language" (alphabetical by `LocaleCodes.id(...)`) — explicitly not dependent on scan/read order
+  - [x] Unit tests: exact match, variant match (e.g. `de_AT` client, `de_DE` bundle), fallback-locale match, no match at all
 
 ## 6. Core: color palette
 
