@@ -65,6 +65,15 @@ public final class MinestomDemoServer {
     }
 
     public static void main(String[] args) {
+        // Unlike Paper/Velocity, Minestom does NOT translate a Component.translatable(...) via
+        // GlobalTranslator before writing it to the wire unless this flag is on (it defaults to
+        // false) - without it, the lazy render path (Messages.render(String, ...), used by
+        // ShopCommand, the join broadcast/welcome, and /runtime) sends the raw translation key to
+        // the client instead of a resolved message. Must be set before MinecraftServer.init()
+        // triggers ServerFlag's static init. The eager, LocaleSource-managed path (/lang, /score)
+        // is unaffected either way, since it calls GlobalTranslator.render(...) itself in Messages.
+        System.setProperty("minestom.automatic-component-translation", "true");
+
         TagPalette palette = TagPalette.of(Map.of(
                 "accent", NamedTextColor.GOLD,
                 "success", NamedTextColor.GREEN,
