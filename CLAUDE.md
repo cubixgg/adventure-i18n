@@ -8,10 +8,13 @@ here.
 
 `docs/roadmap.md` is the authoritative up-to-date checklist — check it for exactly which sections
 are done. As of this writing, both modules' public APIs are implemented and tested through section
-13: `adventure-i18n-core` (locale parsing, lang file scanning, fallback resolution, `TagPalette`,
+14: `adventure-i18n-core` (locale parsing, lang file scanning, fallback resolution, `TagPalette`,
 `PrefixPolicy`, `KeyedTranslator`, `TranslationIssueListener`, `LocaleSource`, `Messages`,
-`LangFileConsistency`) and `adventure-i18n-json` (`JsonLangFileFormat`). Section 14 (Javadoc
-completeness, `README.md` quickstart, versioning/publishing decision) is what's left before v1.
+`LangFileConsistency`) and `adventure-i18n-json` (`JsonLangFileFormat`). Every pre-v1 roadmap item is
+now checked off, including the versioning/publishing decision (`adventure-i18n-core`/
+`adventure-i18n-json` publish to a self-hosted Reposilite instance via `release-please`/CI, see
+[ADR-0005](./docs/decisions/0005-reposilite-release-please.md)) — no release has actually been tagged
+yet, though, so nothing is installable from Reposilite until the first one lands.
 **Read `docs/spec.md` in full before
 writing any code here** — it is the authoritative design for the class layout, API shapes, and
 rationale described below. Do not invent structure that contradicts it; if an implementation
