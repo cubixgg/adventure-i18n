@@ -5,18 +5,18 @@
 A generic Adventure/MiniMessage translation library for Minecraft server projects (Paper, Velocity,
 Minestom, Sponge). It separates the generic core that every such project ends up writing anyway —
 per-locale lang file loading, fallback resolution, `GlobalTranslator` registration, `<tag>` placeholder
-resolution against a colour palette — from the three points that are usually hardcoded instead of
-configured: the set of supported locales, the translator's namespace and colour palette, and the lang
+resolution against a color palette — from the three points that are usually hardcoded instead of
+configured: the set of supported locales, the translator's namespace and color palette, and the lang
 file format. See [`spec.md`](./docs/spec.md) for the full design and the reasoning behind each of
 those.
 
 ## Status
 
-Concept stage: [`spec.md`](./docs/spec.md) is the complete design, [`roadmap.md`](./docs/roadmap.md)
-is the implementation checklist, and no code has been written yet. Nothing described below is
-published or usable as a dependency yet.
+Pre-implementation: [`spec.md`](./docs/spec.md) is the complete design, [`roadmap.md`](./docs/roadmap.md)
+is the implementation checklist, and the Gradle module split below is set up — but no library code
+has been written yet. Nothing described below is published or usable as a dependency yet.
 
-## Modules (planned)
+## Modules
 
 | Module | Purpose |
 |---|---|
@@ -48,6 +48,7 @@ instead of relying on the client-reported locale.
 - [`spec.md`](./docs/spec.md) — the full design and every decision, with rationale
 - [`roadmap.md`](./docs/roadmap.md) — implementation checklist
 - [`CLAUDE.md`](./CLAUDE.md) — architecture principles and non-negotiables
+- [`docs/decisions/`](./docs/decisions) — ADRs for load-bearing decisions
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — workflow, commit/branch/PR conventions
 
 ## Development

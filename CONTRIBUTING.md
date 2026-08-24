@@ -5,13 +5,14 @@ Thanks for looking at contributing to `adventure-i18n`. Before making changes, s
 - [`spec.md`](./docs/spec.md) – full design and rationale for the library
 - [`roadmap.md`](./docs/roadmap.md) – implementation status and what to work on next
 - [`CLAUDE.md`](./CLAUDE.md) – architecture principles and non-negotiables
-- [`docs/`](./docs) – user-facing documentation, once it exists
+- [`docs/`](./docs) – user-facing documentation, once it exists, [`docs/decisions/`](./docs/decisions) –
+  ADRs for load-bearing decisions
 
 ## Setup
 
-- `./gradlew build` builds and tests every module
-- No JDK toolchain is pinned yet — that's part of [`roadmap.md`](./docs/roadmap.md)'s project/build
-  setup phase, alongside the `adventure-i18n-core` / `adventure-i18n-json` module split
+- `./gradlew build` builds and tests every module (`adventure-i18n-core`, `adventure-i18n-json`)
+- No JDK toolchain is pinned yet — still an open item in
+  [`roadmap.md`](./docs/roadmap.md)'s project/build setup section
 
 See [`README.md`](./README.md) for more on local development.
 
@@ -96,5 +97,8 @@ Full detail and rationale in `CLAUDE.md` and `spec.md`; the short version:
 
 - User-facing docs go in `docs/`, written for someone who already knows Adventure/MiniMessage and
   wants to use this library, not a re-explanation of Adventure itself.
+- Architecture Decision Records go in `docs/decisions/`, one file per decision, numbered
+  sequentially. Write one only for a decision a future contributor could plausibly second-guess
+  without the context — not for every roadmap item.
 - If a roadmap item changes what an existing `docs/` page (or `spec.md`) says, update that page in
   the same commit.

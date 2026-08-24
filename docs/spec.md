@@ -5,13 +5,13 @@
 Many Adventure/MiniMessage-based Minecraft projects (Paper, Velocity, Minestom, Sponge) end up
 writing the same small piece of infrastructure sooner or later: a class that reads lang files per
 locale, keeps them in a map, registers itself as a `GlobalTranslator` source, and resolves `<tag>`
-placeholders against a project-specific colour palette. That is generic in principle — plain
+placeholders against a project-specific color palette. That is generic in principle — plain
 Adventure/MiniMessage, no platform dependency — but in practice it usually ends up welded to the one
 project that needed it first, at three specific points:
 
 1. A static, hand-maintained list of every supported locale, which turns every new language into a
    code change and which needs to know upfront, at boot, which files must exist.
-2. The translator class has the namespace `Key` and the colour palette hardcoded instead of
+2. The translator class has the namespace `Key` and the color palette hardcoded instead of
    configured.
 3. The file format (usually JSON via a specific JSON library) isn't swappable, even though parsing
    a flat `key -> String` object is trivial without a third-party library at all.
@@ -56,7 +56,7 @@ adventure-i18n-core/
     ├── LanguageVariantFallback.java  // default: exact -> same language -> fixed fallback locale
     ├── TranslationIssueListener.java // seam for missing/fallback-served keys
     ├── LoggingTranslationIssueListener.java // default implementation, deduplicated via SLF4J
-    ├── TagPalette.java               // generic tag-name -> colour object, filled in by the caller
+    ├── TagPalette.java               // generic tag-name -> color object, filled in by the caller
     ├── PrefixPolicy.java             // optional <prefix> splice, configurable key/tag
     ├── KeyedTranslator.java          // MiniMessageTranslator implementation, assembled via builder
     ├── LocaleSource.java             // swappable per-recipient locale source (e.g. a database instead of the client)
@@ -162,8 +162,8 @@ list on the builder), never decided implicitly by read order.
 
 ### `TagPalette`
 
-Separates two things that often get merged into one: (a) *a specific* colour palette, (b) the
-generic mechanism "tag name → colour, plus a MiniMessage parser that knows about it". (b) is the
+Separates two things that often get merged into one: (a) *a specific* color palette, (b) the
+generic mechanism "tag name → color, plus a MiniMessage parser that knows about it". (b) is the
 library, (a) stays with the project:
 
 ```java
@@ -171,7 +171,7 @@ public final class TagPalette {
     public static TagPalette of(Map<String, TextColor> tags);
     public TagResolver resolver();
     public MiniMessage miniMessage();     // MiniMessage.builder().editTags(...).build()
-    public TextColor colour(String tag);
+    public TextColor color(String tag);
 }
 ```
 
@@ -268,7 +268,7 @@ exclusive project-wide choice.
 `TranslatableComponent` (resolved lazily) or renders immediately against an explicit locale. `Args`
 provides named placeholders (text, number, boolean, nested components) — text values are always
 inserted verbatim, never parsed as MiniMessage, so player input (e.g. a display name) can never
-inject colours or click events. Both are already fully platform- and project-independent and carry
+inject colors or click events. Both are already fully platform- and project-independent and carry
 over into the library essentially unchanged; `Args` could optionally be renamed to `Placeholders` if
 that reads more clearly outside a Minecraft context.
 

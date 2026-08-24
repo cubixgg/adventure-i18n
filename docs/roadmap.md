@@ -4,14 +4,14 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 
 ## 1. Project & build setup
 
-- [ ] Split the single-module Gradle skeleton into a multi-module build
-  - [ ] `adventure-i18n-core` module (own `build.gradle.kts`)
-  - [ ] `adventure-i18n-json` module (own `build.gradle.kts`, depends on `core`)
-  - [ ] Update `settings.gradle.kts` to `include("adventure-i18n-core", "adventure-i18n-json")`
-- [ ] `adventure-i18n-core` dependencies: `adventure-api`, `adventure-text-minimessage`, `slf4j-api` only — no JSON library, not even transitively
-- [ ] `adventure-i18n-json` dependencies: `adventure-i18n-core` + Gson
-- [ ] Decide package name (spec uses placeholder `yourorg.i18n`; current group id is `gg.cubix.adventurei18n`) and apply consistently across both modules
-- [ ] Set up publishing config (`maven-publish`) for both artifacts, since the goal is a standalone open-source library
+- [x] Split the single-module Gradle skeleton into a multi-module build
+  - [x] `adventure-i18n-core` module (own `build.gradle.kts`)
+  - [x] `adventure-i18n-json` module (own `build.gradle.kts`, depends on `core`)
+  - [x] Update `settings.gradle.kts` to `include("adventure-i18n-core", "adventure-i18n-json")`
+- [x] `adventure-i18n-core` dependencies: `adventure-api`, `adventure-text-minimessage`, `slf4j-api` only — no JSON library, not even transitively
+- [x] `adventure-i18n-json` dependencies: `adventure-i18n-core` + Gson
+- [x] Decide package name (spec uses placeholder `yourorg.i18n`; current group id is `gg.cubix.adventurei18n`) and apply consistently across both modules — decided: `gg.cubix.adventurei18n` for core, `gg.cubix.adventurei18n.json` for the JSON add-on
+- [x] Set up publishing config (`maven-publish`) for both artifacts, since the goal is a standalone open-source library — `publishToMavenLocal` works for both; no remote repository target configured yet (Maven Central vs. self-hosted, see section 14)
 
 ## 2. Core: locale identifiers
 
@@ -49,14 +49,14 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
   - [ ] Deterministic selection of "which regional variant represents a language" (e.g. alphabetical, or a priority list on the builder) — explicitly not dependent on scan/read order
   - [ ] Unit tests: exact match, variant match (e.g. `de_AT` client, `de_DE` bundle), fallback-locale match, no match at all
 
-## 6. Core: colour palette
+## 6. Core: color palette
 
 - [ ] `TagPalette`
   - [ ] `of(Map<String, TextColor> tags)` factory
   - [ ] `resolver()` — `TagResolver` for the configured tags
   - [ ] `miniMessage()` — `MiniMessage.builder().editTags(...).build()`
-  - [ ] `colour(String tag)` accessor
-  - [ ] Unit tests: known tag resolves to configured colour, unknown tag behavior defined and tested
+  - [ ] `color(String tag)` accessor
+  - [ ] Unit tests: known tag resolves to configured color, unknown tag behavior defined and tested
 
 ## 7. Core: prefix splicing
 
@@ -102,7 +102,7 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
   - [ ] Document clearly: consumers using their own `LocaleSource` must use `render(...)` and must **not** send raw `Component.translatable(...)` (client locale would win again via `GlobalTranslator`)
 - [ ] `Args`
   - [ ] Named placeholders: text, number, boolean, nested components
-  - [ ] Text values always inserted verbatim, never parsed as MiniMessage (prevents injected colours/click events from player-controlled strings, e.g. display names)
+  - [ ] Text values always inserted verbatim, never parsed as MiniMessage (prevents injected colors/click events from player-controlled strings, e.g. display names)
   - [ ] Consider renaming to `Placeholders` for a non-Minecraft-flavored name (evaluate before first release, since it's a public API decision)
 - [ ] Unit tests: install/uninstall round-trip, eager render, `LocaleSource`-based render, verbatim placeholder insertion (no MiniMessage injection)
 
