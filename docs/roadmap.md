@@ -23,11 +23,11 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 
 ## 3. Core: lang file parsing
 
-- [ ] `LangFileFormat` interface — `fileExtension()`, `parse(InputStream in, String sourceName)`
-- [ ] `PropertiesLangFileFormat` (default implementation)
-  - [ ] Built on `java.util.Properties` / `PropertyResourceBundle` (UTF-8 by default, Java 9+)
-  - [ ] Class documentation explaining escaping rules (backslashes, leading whitespace in values) so e.g. `key = <error>Score: <points></error>` is understood to parse correctly
-  - [ ] Unit tests covering keys/values with `:`, `<`, `>`, and escaped characters
+- [x] `LangFileFormat` interface — `fileExtension()`, `parse(InputStream in, String sourceName)`
+- [x] `PropertiesLangFileFormat` (default implementation)
+  - [x] Built on `java.util.Properties` (explicit UTF-8 `InputStreamReader`, not `Properties#load(InputStream)`'s ISO-8859-1 default — see the spec.md correction made alongside this item)
+  - [x] Class documentation explaining escaping rules (backslashes, leading whitespace in values) so e.g. `key = <error>Score: <points></error>` is understood to parse correctly
+  - [x] Unit tests covering keys/values with `:`, `<`, `>`, and escaped characters
 
 ## 4. Core: locale discovery
 

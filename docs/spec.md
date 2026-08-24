@@ -72,8 +72,13 @@ adventure-i18n-json/            (optional add-on module, separate artifact)
 
 Dependencies of `adventure-i18n-core`: `adventure-api`, `adventure-text-minimessage`, `slf4j-api` —
 **no Gson, no Jackson, no JSON library at all**. The default parser is `PropertiesLangFileFormat`,
-built on `java.util.Properties`/`PropertyResourceBundle`, which have read UTF-8 by default since
-Java 9. A line like `key = <error>Score: <points></error>` reads correctly: only the *first*
+built on `java.util.Properties`. Note that only `PropertyResourceBundle` (via
+`ResourceBundle.getBundle`, JEP 226) defaults to UTF-8 since Java 9 — `Properties#load(InputStream)`
+itself still assumes ISO-8859-1, since `ClasspathLangSource` hands `LangFileFormat` a raw
+`InputStream`, not a `ResourceBundle`. `PropertiesLangFileFormat` therefore explicitly wraps the
+stream in a UTF-8 `InputStreamReader` before calling `Properties#load(Reader)`, so UTF-8 lang files
+decode correctly regardless of JDK version rather than relying on that JEP 226 default. A line like
+`key = <error>Score: <points></error>` reads correctly: only the *first*
 unescaped `=`/`:`/whitespace separates key from value, everything after it — including further `:`
 or `<`/`>` characters — stays part of the value unchanged. Escaping only matters for backslashes and
 leading whitespace in the value; that belongs in `PropertiesLangFileFormat`'s class documentation,
