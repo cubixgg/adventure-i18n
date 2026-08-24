@@ -117,10 +117,10 @@ Implemented alongside section 8 rather than after it: `KeyedTranslator`'s builde
 
 ## 13. `adventure-i18n-json` add-on module
 
-- [ ] `JsonLangFileFormat` implementing `LangFileFormat`
-  - [ ] Parses a flat JSON object (`key -> string`)
-  - [ ] Hard error (not silent drop) on nested values or non-string values — broken lang file must fail at boot, not surface raw keys to players
-  - [ ] Unit tests: valid flat file, nested-value rejection, non-string-value rejection
+- [x] `JsonLangFileFormat` implementing `LangFileFormat`
+  - [x] Parses a flat JSON object (`key -> string`)
+  - [x] Hard error (not silent drop) on nested values or non-string values — broken lang file must fail at boot, not surface raw keys to players
+  - [x] Unit tests: valid flat file, nested-value rejection, non-string-value rejection
 
 ## 14. Documentation & release readiness
 

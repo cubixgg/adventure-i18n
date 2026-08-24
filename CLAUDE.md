@@ -7,10 +7,12 @@ here.
 ## Project status
 
 `docs/roadmap.md` is the authoritative up-to-date checklist — check it for exactly which sections
-are done. As of this writing, `adventure-i18n-core` is implemented through its whole public API
-(locale parsing, lang file scanning, fallback resolution, `TagPalette`, `PrefixPolicy`,
-`KeyedTranslator`, `TranslationIssueListener`, `LocaleSource`, `Messages`); `adventure-i18n-json`
-(the optional JSON `LangFileFormat` add-on) is not yet built. **Read `docs/spec.md` in full before
+are done. As of this writing, both modules' public APIs are implemented and tested through section
+13: `adventure-i18n-core` (locale parsing, lang file scanning, fallback resolution, `TagPalette`,
+`PrefixPolicy`, `KeyedTranslator`, `TranslationIssueListener`, `LocaleSource`, `Messages`,
+`LangFileConsistency`) and `adventure-i18n-json` (`JsonLangFileFormat`). Section 14 (Javadoc
+completeness, `README.md` quickstart, versioning/publishing decision) is what's left before v1.
+**Read `docs/spec.md` in full before
 writing any code here** — it is the authoritative design for the class layout, API shapes, and
 rationale described below. Do not invent structure that contradicts it; if an implementation
 decision isn't covered by the spec, prefer asking or extending it consistently rather than

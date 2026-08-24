@@ -13,18 +13,18 @@ those.
 ## Status
 
 [`spec.md`](./docs/spec.md) is the complete design, [`roadmap.md`](./docs/roadmap.md) is the
-implementation checklist. `adventure-i18n-core`'s public API is implemented and tested through
-section 11 of the roadmap (locale discovery, fallback, color palette, `<prefix>` splicing,
-`KeyedTranslator`, `Messages`); `adventure-i18n-json` (the optional JSON `LangFileFormat`) isn't
-built yet. Nothing is published to a repository yet, so this isn't usable as a dependency in
-another project.
+implementation checklist. Both modules' public APIs are implemented and tested through section 13
+of the roadmap (locale discovery, fallback, color palette, `<prefix>` splicing, `KeyedTranslator`,
+`Messages`, `LangFileConsistency`, and the optional `JsonLangFileFormat`). Section 14 (Javadoc
+completeness, this README's quickstart, a versioning/publishing decision) is what's left before v1.
+Nothing is published to a repository yet, so this isn't usable as a dependency in another project.
 
 ## Modules
 
 | Module | Purpose |
 |---|---|
 | `adventure-i18n-core` | the library — locale discovery, fallback, `KeyedTranslator`, `Messages`; depends only on `adventure-api`, `adventure-text-minimessage`, `slf4j-api` |
-| `adventure-i18n-json` | optional add-on providing `JsonLangFileFormat` for consumers who want JSON instead of the default `.properties` format (not yet built) |
+| `adventure-i18n-json` | optional add-on providing `JsonLangFileFormat` for consumers who want JSON instead of the default `.properties` format |
 
 ## Usage
 
