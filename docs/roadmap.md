@@ -60,11 +60,11 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 
 ## 7. Core: prefix splicing
 
-- [ ] `PrefixPolicy` record — `templateKey`, `tag`, `of(String key, String tag)` factory
-- [ ] Splice logic: substitute the prefix template's own translation textually before MiniMessage parses the surrounding message
-- [ ] Guard against self-reference (prefix key itself containing its own tag)
-- [ ] Make it optional on `KeyedTranslator`'s builder
-- [ ] Unit tests: prefix present, prefix omitted, self-referencing prefix guarded
+- [x] `PrefixPolicy` record — `templateKey`, `tag`, `of(String key, String tag)` factory
+- [x] Splice logic: substitute the prefix template's own translation textually before MiniMessage parses the surrounding message (`PrefixPolicy#splice(String, Map<String, String>)`)
+- [x] Guard against self-reference (prefix key itself containing its own tag) — a single, non-recursive substitution pass by construction; a leftover unresolved tag is left as-is rather than recursing
+- [ ] Make it optional on `KeyedTranslator`'s builder — deferred to section 8, once `KeyedTranslator` itself exists
+- [x] Unit tests: prefix present, prefix omitted, self-referencing prefix guarded
 
 ## 8. Core: translator assembly
 
