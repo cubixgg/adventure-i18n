@@ -88,8 +88,9 @@ Full detail and rationale in `CLAUDE.md` and `spec.md`; the short version:
 - A project using its own `LocaleSource` must render eagerly via `Messages.render(locales, ...)` and
   must never send a raw `Component.translatable(...)` for that recipient — the client's own locale
   would silently win again via `GlobalTranslator`.
-- `Args` never parses user-supplied text as MiniMessage — text placeholders are always inserted
-  verbatim.
+- Named placeholders never parse user-supplied text as MiniMessage — upstream
+  `Argument.string(name, value)` already wraps the value in `Component.text(...)` (verbatim); there
+  is no custom `Args` class re-implementing this (see ADR-0004).
 - Fail fast only where silence would be worse: a missing fallback-locale bundle aborts at build time;
   an unrecognized file name in a scanned directory is skipped and logged once, not a boot abort.
 

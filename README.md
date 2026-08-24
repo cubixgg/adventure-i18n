@@ -12,20 +12,24 @@ those.
 
 ## Status
 
-Pre-implementation: [`spec.md`](./docs/spec.md) is the complete design, [`roadmap.md`](./docs/roadmap.md)
-is the implementation checklist, and the Gradle module split below is set up — but no library code
-has been written yet. Nothing described below is published or usable as a dependency yet.
+[`spec.md`](./docs/spec.md) is the complete design, [`roadmap.md`](./docs/roadmap.md) is the
+implementation checklist. `adventure-i18n-core`'s public API is implemented and tested through
+section 11 of the roadmap (locale discovery, fallback, color palette, `<prefix>` splicing,
+`KeyedTranslator`, `Messages`); `adventure-i18n-json` (the optional JSON `LangFileFormat`) isn't
+built yet. Nothing is published to a repository yet, so this isn't usable as a dependency in
+another project.
 
 ## Modules
 
 | Module | Purpose |
 |---|---|
-| `adventure-i18n-core` | the library — locale discovery, fallback, `KeyedTranslator`, `Messages`/`Args`; depends only on `adventure-api`, `adventure-text-minimessage`, `slf4j-api` |
-| `adventure-i18n-json` | optional add-on providing `JsonLangFileFormat` for consumers who want JSON instead of the default `.properties` format |
+| `adventure-i18n-core` | the library — locale discovery, fallback, `KeyedTranslator`, `Messages`; depends only on `adventure-api`, `adventure-text-minimessage`, `slf4j-api` |
+| `adventure-i18n-json` | optional add-on providing `JsonLangFileFormat` for consumers who want JSON instead of the default `.properties` format (not yet built) |
 
-## Usage (planned API, not yet implemented)
+## Usage
 
-Once `adventure-i18n-core` exists, the intended shape is:
+Not published yet, so there's no coordinate to depend on - but the shape below already works
+against this repository's current `adventure-i18n-core`:
 
 ```java
 Key namespace = Key.key("myproject", "i18n");
@@ -36,12 +40,15 @@ KeyedTranslator translator = KeyedTranslator.builder(namespace)
     .build();
 
 Messages.install(translator);
-player.sendMessage(Messages.render(Locale.US, "myproject.welcome", Args.of("player", player.getUsername())));
+player.sendMessage(Messages.render(Locale.US, "myproject.welcome", Argument.string("player", player.getUsername())));
 ```
 
-See [`spec.md`](./docs/spec.md)'s "Core classes in detail" section for the full API surface,
-including the `LocaleSource`-based path for projects that manage a player's language themselves
-instead of relying on the client-reported locale.
+`Argument` is upstream Adventure's own
+`net.kyori.adventure.text.minimessage.translation.Argument` - there's no `Args`/`Placeholders`
+class in this library (see [ADR-0004](./docs/decisions/0004-no-custom-args-class.md)). See
+[`spec.md`](./docs/spec.md)'s "Core classes in detail" section for the full API surface, including
+the `LocaleSource`-based path for projects that manage a player's language themselves instead of
+relying on the client-reported locale.
 
 ## Documentation
 

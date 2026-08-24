@@ -6,13 +6,16 @@ here.
 
 ## Project status
 
-This repository is currently pre-implementation: `docs/spec.md` is the design document, the
-`adventure-i18n-core`/`adventure-i18n-json` Gradle module split is set up (see `docs/roadmap.md`
-section 1), but neither module has any source files yet. **Read `docs/spec.md` in full before
+`docs/roadmap.md` is the authoritative up-to-date checklist — check it for exactly which sections
+are done. As of this writing, `adventure-i18n-core` is implemented through its whole public API
+(locale parsing, lang file scanning, fallback resolution, `TagPalette`, `PrefixPolicy`,
+`KeyedTranslator`, `TranslationIssueListener`, `LocaleSource`, `Messages`); `adventure-i18n-json`
+(the optional JSON `LangFileFormat` add-on) is not yet built. **Read `docs/spec.md` in full before
 writing any code here** — it is the authoritative design for the class layout, API shapes, and
 rationale described below. Do not invent structure that contradicts it; if an implementation
 decision isn't covered by the spec, prefer asking or extending it consistently rather than
-guessing.
+guessing — and if implementing something reveals a real gap or correction in the spec, fix the spec
+in the same commit (`CONTRIBUTING.md`'s rule), the way several `docs/decisions/` ADRs already did.
 
 ## What this project is
 
@@ -57,16 +60,19 @@ never transitively pulls in a JSON library:
   parser interface (`LangFileFormat`) with its default `PropertiesLangFileFormat`, locale
   resolution (`FallbackStrategy` / `LanguageVariantFallback`), the color mechanism
   (`TagPalette`), the optional `<prefix>` splice (`PrefixPolicy`), the `MiniMessageTranslator`
-  implementation (`KeyedTranslator`, builder-assembled), the per-recipient locale override seam
-  (`LocaleSource`), and the install/render entry points (`Messages`, `Args`).
+  subclass (`KeyedTranslator`, builder-assembled — see ADR context in `docs/spec.md`'s
+  `KeyedTranslator` section: it's a thin adapter over an upstream abstract class, not a parser
+  built from scratch), the per-recipient locale override seam (`LocaleSource`), and the
+  install/render entry points (`Messages` — there is no `Args`/`Placeholders` class, see
+  [ADR-0004](./docs/decisions/0004-no-custom-args-class.md); use upstream
+  `net.kyori.adventure.text.minimessage.translation.Argument` directly).
 - `adventure-i18n-json` (package `gg.cubix.adventurei18n.json`) — optional add-on, depends on
   `adventure-i18n-core` (`api` — `JsonLangFileFormat` implements core's `LangFileFormat`) and
-  `gson` (`implementation`), provides only `JsonLangFileFormat`.
+  `gson` (`implementation`), provides only `JsonLangFileFormat`. Not yet built
+  (`docs/roadmap.md` section 13).
 
-Both modules currently have no source files yet (still section 2+ of `docs/roadmap.md`); the
-Gradle wiring, dependency versions and `maven-publish` setup (no remote repository configured yet)
-are already in place. Root `build.gradle.kts` is a parent aggregator only — it has no sources or
-plugins of its own, just shared `group`/`version`/repository/publishing config for the subprojects.
+Root `build.gradle.kts` is a parent aggregator only — it has no sources or plugins of its own, just
+shared `group`/`version`/repository/publishing config for the subprojects.
 
 All dependency versions live in `gradle/libs.versions.toml`. No inline version strings in a
 module's `build.gradle.kts` — add a new entry to the catalog instead, even for a dependency used by
@@ -91,15 +97,17 @@ rationale in `docs/spec.md`):
   player in a database) must use the `LocaleSource`-based `Messages.render(...)` overload and
   resolve eagerly server-side — sending a raw `Component.translatable(...)` in that mode would let
   the client's own locale silently win again. Both paths coexist and are chosen per call site.
-- **`Args` never parses user-supplied text as MiniMessage.** Text placeholders are inserted verbatim
-  so player-controlled strings (e.g. display names) can't inject colors/click events.
+- **Named placeholders never parse user-supplied text as MiniMessage.** Upstream
+  `Argument.string(name, value)` wraps the value in `Component.text(...)` — verbatim, so
+  player-controlled strings (e.g. display names) can't inject colors/click events. Don't build a
+  parallel mechanism that re-parses it (see ADR-0004).
 - **Fail-fast only where silence would be worse:** a missing fallback-locale file aborts at build
   time; an unrecognized file name in the scanned directory is just skipped and logged once (not a
   boot abort, since stray non-lang files may legitimately be present).
 
 ## Explicit non-goals (do not implement without discussion)
 
-- No ICU/CLDR plural rules or `MessageFormat` — MiniMessage choice tags + `Args.number` are
+- No ICU/CLDR plural rules or `MessageFormat` — MiniMessage choice tags + `Argument.numeric` are
   considered sufficient for v1.
 - No YAML lang file format in v1 (only the `LangFileFormat` interface needs to allow for it later).
 - No Bukkit/Velocity/Minestom platform adapter classes in the library — `Messages.install` is

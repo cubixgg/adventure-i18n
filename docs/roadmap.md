@@ -99,16 +99,14 @@ Implemented alongside section 8 rather than after it: `KeyedTranslator`'s builde
 
 ## 11. Core: install & render entry points
 
-- [ ] `Messages`
-  - [ ] `install(Translator)` / `uninstall(Translator)` against `GlobalTranslator`
-  - [ ] `render(Locale locale, String key, ComponentLike... args)` — eager rendering
-  - [ ] `render(LocaleSource locales, UUID recipientId, String key, ComponentLike... args)` — resolves via `LocaleSource`, falls back to `KeyedTranslator.systemFallback()`, delegates to the eager overload
-  - [ ] Document clearly: consumers using their own `LocaleSource` must use `render(...)` and must **not** send raw `Component.translatable(...)` (client locale would win again via `GlobalTranslator`)
-- [ ] `Args`
-  - [ ] Named placeholders: text, number, boolean, nested components
-  - [ ] Text values always inserted verbatim, never parsed as MiniMessage (prevents injected colors/click events from player-controlled strings, e.g. display names)
-  - [ ] Consider renaming to `Placeholders` for a non-Minecraft-flavored name (evaluate before first release, since it's a public API decision)
-- [ ] Unit tests: install/uninstall round-trip, eager render, `LocaleSource`-based render, verbatim placeholder insertion (no MiniMessage injection)
+- [x] `Messages`
+  - [x] `install(Translator)` / `uninstall(Translator)` against `GlobalTranslator`
+  - [x] `render(String key, ComponentLike... args)` — lazy, resolved later against the client-reported locale
+  - [x] `render(Locale locale, String key, ComponentLike... args)` — eager rendering
+  - [x] `render(LocaleSource locales, UUID recipientId, String key, ComponentLike... args)` — resolves via `LocaleSource`, falls back to `KeyedTranslator.systemFallback()`, delegates to the eager overload
+  - [x] Document clearly: consumers using their own `LocaleSource` must use `render(...)` and must **not** send raw `Component.translatable(...)` (client locale would win again via `GlobalTranslator`)
+- [x] ~~`Args`~~ — **not built** (see [ADR-0004](./decisions/0004-no-custom-args-class.md)): upstream `net.kyori.adventure.text.minimessage.translation.Argument` already provides named text/number/boolean/component placeholders, with `.string(...)` already wrapping values in `Component.text(...)` (verbatim, never parsed as MiniMessage) — verified against the actual Adventure 5.2.0 sources, not assumed
+- [x] Unit tests: install/uninstall round-trip, lazy render, eager render, `LocaleSource`-based render (both a present and an absent `LocaleSource` result, to prove `systemFallback()` — not the installed translator's own fallback — is used when absent)
 
 ## 12. Validation & cross-cutting testing
 

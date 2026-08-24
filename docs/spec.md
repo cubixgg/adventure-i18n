@@ -60,8 +60,8 @@ adventure-i18n-core/
     ├── PrefixPolicy.java             // optional <prefix> splice, configurable key/tag
     ├── KeyedTranslator.java          // MiniMessageTranslator implementation, assembled via builder
     ├── LocaleSource.java             // swappable per-recipient locale source (e.g. a database instead of the client)
-    ├── Messages.java                 // install/uninstall/render (+ LocaleSource overload)
-    └── Args.java                     // named placeholders for render calls
+    └── Messages.java                 // install/uninstall/render (+ LocaleSource overload); named
+                                       // placeholders are upstream Argument, not a class of our own (ADR-0004)
 
 adventure-i18n-json/            (optional add-on module, separate artifact)
 └── src/main/java/yourorg/i18n/json/
@@ -224,9 +224,8 @@ mechanism, applies the component's fallback style, and appends its children. `Ke
 therefore `extends MiniMessageTranslator` and overrides just `getMiniMessageString(...)` (locale
 resolution via `FallbackStrategy`, prefix splicing, issue reporting) and `name()` (the configured
 `Key` namespace) - it is a thin adapter over an existing upstream mechanism, not a parser
-implementation of its own. This also means a custom `Args` class (see "`Messages` and `Args`" below)
-may turn out to be largely redundant with upstream's own `Argument` utility - flagged there, to be
-resolved when that item is actually implemented.
+implementation of its own. This is also why there is no custom `Args` class (see "`Messages`" below
+and ADR-0004): upstream's own `Argument` utility already covers it.
 
 Otherwise thread-safe (lookups can happen from tick and IO threads alike), assembled via a builder
 instead of hardcoding a namespace and palette:
@@ -286,6 +285,13 @@ public static Component render(LocaleSource locales, UUID recipientId, String ke
 }
 ```
 
+`KeyedTranslator.systemFallback()` is a plain static constant (`Locale.US`), **not** tied to any
+specific installed `KeyedTranslator` instance's own configured `.fallback(...)` - `Messages` doesn't
+track "the" installed translator (`GlobalTranslator` already supports multiple simultaneous
+sources, e.g. one `KeyedTranslator` per namespace), so there is no single instance to read a
+fallback from. It exists purely as a documented, sane last resort for the rare case where a
+`LocaleSource` genuinely has no opinion at all.
+
 A project with its own player API simply instantiates its `LocaleSource` implementation (e.g.
 `dbBackedLocales::get`) and consistently calls this overload instead of relying on the client-locale
 automatism. Whoever wants the client locale instead just does nothing — `Messages.install(translator)`
@@ -293,24 +299,30 @@ plus `player.sendMessage(Messages.render(key, args))` remains the default path a
 unchanged. Both paths are therefore usable side by side, decidable per message, not an
 exclusive project-wide choice.
 
-### `Messages` and `Args`
+### `Messages`
 
-`Messages` installs/uninstalls the translator on the `GlobalTranslator` and either builds a
-`TranslatableComponent` (resolved lazily) or renders immediately against an explicit locale. `Args`
-provides named placeholders (text, number, boolean, nested components) — text values are always
-inserted verbatim, never parsed as MiniMessage, so player input (e.g. a display name) can never
-inject colors or click events. Both are already fully platform- and project-independent and carry
-over into the library essentially unchanged; `Args` could optionally be renamed to `Placeholders` if
-that reads more clearly outside a Minecraft context.
+`Messages` installs/uninstalls a translator on the `GlobalTranslator`, and renders a translatable
+message either lazily (`Component.translatable(key, args)`, resolved later against whichever locale
+the recipient's client reports - the Adventure default) or eagerly against an explicit locale (for a
+project managing locale itself, see `LocaleSource` above):
 
-**Note found while implementing `KeyedTranslator` (see above):** upstream
-`net.kyori.adventure.text.minimessage.translation.Argument` (since Adventure 4.20.0/4.21.0) already
-provides exactly this - `Argument.bool(name, value)`, `.numeric(name, value)`, `.string(name, value)`
-(which wraps the value in `Component.text(...)`, i.e. already verbatim/never-parsed-as-MiniMessage),
-and `.component(name, value)` - designed specifically to be used as `Component.translatable(key,
-Argument.string("player", name), ...)` arguments for a `MiniMessageTranslator`. A custom `Args` class
-may turn out to be unnecessary, or reduce to a thin re-export - re-evaluate when this item is actually
-implemented rather than building a parallel mechanism upstream already ships.
+```java
+public static void install(Translator translator);
+public static void uninstall(Translator translator);
+
+public static Component render(String key, ComponentLike... args);                      // lazy
+public static Component render(Locale locale, String key, ComponentLike... args);        // eager
+public static Component render(LocaleSource locales, UUID recipientId, String key, ComponentLike... args); // eager, via LocaleSource
+```
+
+There is no separate `Args`/`Placeholders` class (see ADR-0004): all three `render` overloads accept
+plain `ComponentLike... args`, and named placeholders are built with upstream
+`net.kyori.adventure.text.minimessage.translation.Argument`'s own static factories -
+`Argument.bool(name, value)`, `.numeric(name, value)`, `.string(name, value)` (wraps the value in
+`Component.text(...)`, i.e. already verbatim/never-parsed-as-MiniMessage, so player input like a
+display name can never inject colors or click events), `.component(name, value)` - exactly the
+`Component.translatable(key, Argument.string("player", name), ...)` pattern `KeyedTranslator` (via
+`MiniMessageTranslator`) already consumes.
 
 ## Validation / testability
 
@@ -326,8 +338,8 @@ implemented rather than building a parallel mechanism upstream already ships.
 ## Non-goals (deliberately out of scope)
 
 - No plural rules / ICU `MessageFormat` — MiniMessage choice tags plus client-side number formatting
-  (`Args.number`) cover most cases; real CLDR pluralization would be a separate second effort, not
-  part of v1.
+  (`Argument.numeric`) cover most cases; real CLDR pluralization would be a separate second effort,
+  not part of v1.
 - No YAML support in v1 — only provide the `LangFileFormat` interface so it can be added later
   without touching `KeyedTranslator` (Properties is the default, JSON the one planned add-on
   module).

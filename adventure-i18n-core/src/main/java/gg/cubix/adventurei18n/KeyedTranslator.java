@@ -48,6 +48,17 @@ public final class KeyedTranslator extends MiniMessageTranslator {
         return new Builder(namespace);
     }
 
+    /**
+     * A sane, documented last resort for {@code Messages.render(LocaleSource, ...)} when a
+     * {@link LocaleSource} genuinely has no opinion. Deliberately just a constant, not tied to any
+     * specific installed {@code KeyedTranslator}'s own {@link #fallback()} - nothing tracks "the"
+     * installed translator, since {@code GlobalTranslator} already supports several at once (e.g.
+     * one per namespace).
+     */
+    public static Locale systemFallback() {
+        return Locale.US;
+    }
+
     @Override
     public Key name() {
         return namespace;
