@@ -25,6 +25,7 @@ Nothing is published to a repository yet, so this isn't usable as a dependency i
 |---|---|
 | `adventure-i18n-core` | the library — locale discovery, fallback, `KeyedTranslator`, `Messages`; depends only on `adventure-api`, `adventure-text-minimessage`, `slf4j-api` |
 | `adventure-i18n-json` | optional add-on providing `JsonLangFileFormat` for consumers who want JSON instead of the default `.properties` format |
+| `adventure-i18n-minestom-demo` | runnable [Minestom](https://minestom.net) server demonstrating both modules end to end - not published, not part of the library's public API, see its own [`README.md`](./adventure-i18n-minestom-demo/README.md) |
 
 Two modules, not one, so that depending on `adventure-i18n-core` alone never pulls in a JSON
 library, not even transitively — the default `.properties` format needs nothing beyond the JDK

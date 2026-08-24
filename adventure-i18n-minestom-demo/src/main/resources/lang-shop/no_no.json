@@ -1,0 +1,6 @@
+{
+  "shop.title": "<info><bold>Demobutikk</bold></info> <muted>- prøv: <catalog></muted>",
+  "shop.buy.success": "<success>Kjøpte <item> for <price> mynter.</success> <muted>Saldo: <balance></muted>",
+  "shop.buy.error": "<error>Ikke nok mynter til <item> (koster <price>, du har <balance>).</error>",
+  "shop.unknown.item": "<error>Ukjent vare '<item>'.</error> <muted>Prøv: <catalog></muted>"
+}
