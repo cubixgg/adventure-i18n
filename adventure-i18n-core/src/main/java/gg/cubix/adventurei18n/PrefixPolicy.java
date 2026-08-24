@@ -16,6 +16,10 @@ public record PrefixPolicy(String templateKey, String tag) {
         Objects.requireNonNull(tag, "tag");
     }
 
+    /**
+     * @param templateKey the lang key holding the prefix's own translation
+     * @param tag         the tag string that stands for it in other messages, e.g. {@code "<prefix>"}
+     */
     public static PrefixPolicy of(String templateKey, String tag) {
         return new PrefixPolicy(templateKey, tag);
     }

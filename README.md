@@ -26,10 +26,16 @@ Nothing is published to a repository yet, so this isn't usable as a dependency i
 | `adventure-i18n-core` | the library — locale discovery, fallback, `KeyedTranslator`, `Messages`; depends only on `adventure-api`, `adventure-text-minimessage`, `slf4j-api` |
 | `adventure-i18n-json` | optional add-on providing `JsonLangFileFormat` for consumers who want JSON instead of the default `.properties` format |
 
+Two modules, not one, so that depending on `adventure-i18n-core` alone never pulls in a JSON
+library, not even transitively — the default `.properties` format needs nothing beyond the JDK
+itself. A project that wants JSON lang files adds `adventure-i18n-json` explicitly; everyone else
+never sees Gson on their classpath. See [ADR-0001](./docs/decisions/0001-two-module-split-core-and-json.md)
+for the full reasoning.
+
 ## Usage
 
 Not published yet, so there's no coordinate to depend on - but the shape below already works
-against this repository's current `adventure-i18n-core`:
+against this repository's current `adventure-i18n-core`. Setup is the same either way:
 
 ```java
 Key namespace = Key.key("myproject", "i18n");
@@ -40,15 +46,35 @@ KeyedTranslator translator = KeyedTranslator.builder(namespace)
     .build();
 
 Messages.install(translator);
-player.sendMessage(Messages.render(Locale.US, "myproject.welcome", Argument.string("player", player.getUsername())));
 ```
+
+From there, two ways to render a message, depending on who decides the recipient's locale:
+
+**Client-reported locale (the default)** — a raw `Component.translatable(...)`, resolved
+automatically against whatever locale the recipient's own client reports:
+
+```java
+player.sendMessage(Messages.render("myproject.welcome", Argument.string("player", player.getUsername())));
+```
+
+**A project-managed locale** (e.g. stored per player in a database, so switching Minecraft clients
+doesn't change it) — resolved eagerly, via a `LocaleSource`:
+
+```java
+LocaleSource locales = playerId -> Optional.ofNullable(dbBackedLocales.get(playerId));
+
+player.sendMessage(Messages.render(
+    locales, player.getUniqueId(), "myproject.welcome", Argument.string("player", player.getUsername())));
+```
+
+Whoever uses their own `LocaleSource` for a recipient **must** use this overload for them, not the
+client-locale one above - the client's own reported locale would otherwise win again via
+`GlobalTranslator`. Both paths work side by side, decided per message, not a project-wide choice.
 
 `Argument` is upstream Adventure's own
 `net.kyori.adventure.text.minimessage.translation.Argument` - there's no `Args`/`Placeholders`
 class in this library (see [ADR-0004](./docs/decisions/0004-no-custom-args-class.md)). See
-[`spec.md`](./docs/spec.md)'s "Core classes in detail" section for the full API surface, including
-the `LocaleSource`-based path for projects that manage a player's language themselves instead of
-relying on the client-reported locale.
+[`spec.md`](./docs/spec.md)'s "Core classes in detail" section for the full API surface.
 
 ## Documentation
 

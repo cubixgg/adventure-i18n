@@ -124,10 +124,10 @@ Implemented alongside section 8 rather than after it: `KeyedTranslator`'s builde
 
 ## 14. Documentation & release readiness
 
-- [ ] Package-level / class-level Javadoc for all public core classes (especially the escaping rules noted for `PropertiesLangFileFormat` and the caching warning on `LocaleSource`)
-- [ ] Top-level `README.md`: what the library is, quickstart (`ClasspathLangSource` + `KeyedTranslator.builder` + `Messages.install`), module split rationale
-- [ ] Usage examples for both the client-locale path and the `LocaleSource`-managed path
-- [ ] Versioning/publishing decision (Maven Central / a repository) before tagging v1
+- [x] Package-level / class-level Javadoc for all public core classes (especially the escaping rules noted for `PropertiesLangFileFormat` and the caching warning on `LocaleSource`) — added `package-info.java` for both packages, filled in the remaining builder-method/factory Javadoc gaps found via an audit
+- [x] Top-level `README.md`: what the library is, quickstart (`ClasspathLangSource` + `KeyedTranslator.builder` + `Messages.install`), module split rationale
+- [x] Usage examples for both the client-locale path and the `LocaleSource`-managed path
+- [ ] Versioning/publishing decision (Maven Central / a repository) before tagging v1 — deliberately left open for now, consistent with the earlier call to hold off on release-please/CI (no target decided yet: neither Maven Central's Sonatype namespace/GPG signing setup, nor a self-hosted option, has been chosen)
 
 ## Explicitly out of scope for this roadmap (non-goals, per spec.md)
 

@@ -44,6 +44,11 @@ public final class KeyedTranslator extends MiniMessageTranslator {
         loaded.forEach((locale, translations) -> bundles.put(locale, new ConcurrentHashMap<>(translations)));
     }
 
+    /**
+     * Starts building a translator for {@code namespace} - the {@link Key} returned by
+     * {@link #name()} once built, and used by {@link net.kyori.adventure.translation.GlobalTranslator}
+     * to identify this translator among its other sources.
+     */
     public static Builder builder(Key namespace) {
         return new Builder(namespace);
     }
@@ -107,6 +112,10 @@ public final class KeyedTranslator extends MiniMessageTranslator {
         return prefix == null ? template : prefix.splice(template, bundle);
     }
 
+    /**
+     * Assembles a {@link KeyedTranslator}. {@link #source} and {@link #fallback} are required;
+     * everything else has a sane default and is only ever set to override it.
+     */
     public static final class Builder {
 
         private final Key namespace;
@@ -121,31 +130,51 @@ public final class KeyedTranslator extends MiniMessageTranslator {
             this.namespace = Objects.requireNonNull(namespace, "namespace");
         }
 
+        /**
+         * Required. Where lang bundles are loaded from, e.g. {@link ClasspathLangSource}.
+         */
         public Builder source(LangSource source) {
             this.source = Objects.requireNonNull(source, "source");
             return this;
         }
 
+        /**
+         * Required. The locale served when nothing more specific applies - validated by
+         * {@link #build()} against what {@link #source} actually discovers.
+         */
         public Builder fallback(Locale fallback) {
             this.fallbackLocale = Objects.requireNonNull(fallback, "fallback");
             return this;
         }
 
+        /**
+         * Optional; defaults to a fresh {@link LanguageVariantFallback}.
+         */
         public Builder fallbackStrategy(FallbackStrategy fallbackStrategy) {
             this.fallbackStrategy = Objects.requireNonNull(fallbackStrategy, "fallbackStrategy");
             return this;
         }
 
+        /**
+         * Optional; defaults to {@link MiniMessage#miniMessage()}. Pass a project's own instance
+         * (e.g. {@link TagPalette#miniMessage()}) to make its tags available in lang templates.
+         */
         public Builder miniMessage(MiniMessage miniMessage) {
             this.miniMessage = Objects.requireNonNull(miniMessage, "miniMessage");
             return this;
         }
 
+        /**
+         * Optional; no prefix splicing at all if never called.
+         */
         public Builder prefix(PrefixPolicy prefix) {
             this.prefix = Objects.requireNonNull(prefix, "prefix");
             return this;
         }
 
+        /**
+         * Optional; defaults to {@link TranslationIssueListener#logging()}.
+         */
         public Builder issues(TranslationIssueListener issues) {
             this.issues = Objects.requireNonNull(issues, "issues");
             return this;

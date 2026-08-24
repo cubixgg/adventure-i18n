@@ -78,6 +78,9 @@ public final class LangFileConsistency {
      */
     public record Report(Locale fallback, Map<Locale, Set<String>> missingKeys, Map<Locale, Set<String>> extraKeys) {
 
+        /**
+         * {@code true} if every locale had exactly the same key set as {@link #fallback}.
+         */
         public boolean isConsistent() {
             return missingKeys.isEmpty() && extraKeys.isEmpty();
         }
