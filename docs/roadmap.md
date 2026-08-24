@@ -15,11 +15,11 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 
 ## 2. Core: locale identifiers
 
-- [ ] `LocaleCodes`
-  - [ ] `parse(String id)` — Minecraft-style `en_us` → `Locale`, returns `null` on invalid format
-  - [ ] `id(Locale locale)` — `Locale` → `en_us`-style string
-  - [ ] Validation regex `[A-Za-z]{2,8}([_-][A-Za-z0-9]{2,8})?` to reject arbitrary/hostile input (e.g. from a `/lang` command)
-  - [ ] Unit tests: valid ids, invalid ids, round-trip `id(parse(x)) == x`
+- [x] `LocaleCodes`
+  - [x] `parse(String id)` — Minecraft-style `en_us` → `Locale`, returns `null` on invalid format
+  - [x] `id(Locale locale)` — `Locale` → `en_us`-style string
+  - [x] Validation regex `[A-Za-z]{2,8}([_-][A-Za-z0-9]{2,8})?` to reject arbitrary/hostile input (e.g. from a `/lang` command)
+  - [x] Unit tests: valid ids, invalid ids, round-trip `id(parse(x)) == x`
 
 ## 3. Core: lang file parsing
 
