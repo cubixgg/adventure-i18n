@@ -1,0 +1,78 @@
+# adventure-i18n
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
+A generic Adventure/MiniMessage translation library for Minecraft server projects (Paper, Velocity,
+Minestom, Sponge). It separates the generic core that every such project ends up writing anyway —
+per-locale lang file loading, fallback resolution, `GlobalTranslator` registration, `<tag>` placeholder
+resolution against a colour palette — from the three points that are usually hardcoded instead of
+configured: the set of supported locales, the translator's namespace and colour palette, and the lang
+file format. See [`spec.md`](./docs/spec.md) for the full design and the reasoning behind each of
+those.
+
+## Status
+
+Concept stage: [`spec.md`](./docs/spec.md) is the complete design, [`roadmap.md`](./docs/roadmap.md)
+is the implementation checklist, and no code has been written yet. Nothing described below is
+published or usable as a dependency yet.
+
+## Modules (planned)
+
+| Module | Purpose |
+|---|---|
+| `adventure-i18n-core` | the library — locale discovery, fallback, `KeyedTranslator`, `Messages`/`Args`; depends only on `adventure-api`, `adventure-text-minimessage`, `slf4j-api` |
+| `adventure-i18n-json` | optional add-on providing `JsonLangFileFormat` for consumers who want JSON instead of the default `.properties` format |
+
+## Usage (planned API, not yet implemented)
+
+Once `adventure-i18n-core` exists, the intended shape is:
+
+```java
+Key namespace = Key.key("myproject", "i18n");
+
+KeyedTranslator translator = KeyedTranslator.builder(namespace)
+    .source(ClasspathLangSource.scanning("lang"))
+    .fallback(Locale.US)
+    .build();
+
+Messages.install(translator);
+player.sendMessage(Messages.render(Locale.US, "myproject.welcome", Args.of("player", player.getUsername())));
+```
+
+See [`spec.md`](./docs/spec.md)'s "Core classes in detail" section for the full API surface,
+including the `LocaleSource`-based path for projects that manage a player's language themselves
+instead of relying on the client-reported locale.
+
+## Documentation
+
+- [`spec.md`](./docs/spec.md) — the full design and every decision, with rationale
+- [`roadmap.md`](./docs/roadmap.md) — implementation checklist
+- [`CLAUDE.md`](./CLAUDE.md) — architecture principles and non-negotiables
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md) — workflow, commit/branch/PR conventions
+
+## Development
+
+```bash
+./gradlew build   # build + test
+```
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the full workflow (roadmap-driven, one item per
+commit/PR) and [`CLAUDE.md`](./CLAUDE.md) for architecture rules.
+
+## Contributing
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md). Short version: pick the next unchecked box in
+`roadmap.md`, one item per commit/PR, Conventional Commits.
+
+## A note on how this project is being built
+
+The design in `spec.md`, the checklist in `roadmap.md`, and this repository's scaffolding were put
+together with [Claude Code](https://claude.com/claude-code), as a deliberate experiment in carrying a
+fully-specified library from concept to implementation with an AI coding agent. The concept was
+worked out and reviewed before any implementation started, and the same bar applies regardless of how
+the code gets written: full implementation over partial, tested, documented. `roadmap.md` is what
+keeps that honest, item by item.
+
+## License
+
+[MIT](./LICENSE)

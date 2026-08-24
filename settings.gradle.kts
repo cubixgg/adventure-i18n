@@ -1,0 +1,1 @@
+rootProject.name = "adventure-i18n"
