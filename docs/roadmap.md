@@ -31,15 +31,15 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 
 ## 4. Core: locale discovery
 
-- [ ] `LangSource` functional interface — `Map<Locale, Map<String,String>> load()`
-- [ ] `ClasspathLangSource`
-  - [ ] `scanning(String directory)` — default class loader + `PropertiesLangFileFormat`
-  - [ ] `scanning(ClassLoader loader, String directory, LangFileFormat format)` — explicit variant
-  - [ ] File-URL scanning (exploded classes / IDE run): list directory, match `<identifier>.<extension>`
-  - [ ] Jar-URL scanning (`jar:file:...!/lang`): open as `JarFile`, filter by `lang/` prefix + format extension
-  - [ ] Skip (and log once) file names that don't parse as a locale id via `LocaleCodes.parse` — no boot abort
-  - [ ] Unit tests against an exploded resource directory
-  - [ ] Unit tests against a real built jar (packaged fixture) — flagged in spec as highest platform-dependent risk
+- [x] `LangSource` functional interface — `Map<Locale, Map<String,String>> load()`
+- [x] `ClasspathLangSource`
+  - [x] `scanning(String directory)` — default class loader + `PropertiesLangFileFormat`
+  - [x] `scanning(ClassLoader loader, String directory, LangFileFormat format)` — explicit variant
+  - [x] File-URL scanning (exploded classes / IDE run): list directory, match `<identifier>.<extension>`
+  - [x] Jar-URL scanning (`jar:file:...!/lang`): open as `JarFile`, filter by `lang/` prefix + format extension
+  - [x] Skip (and log once) file names that don't parse as a locale id via `LocaleCodes.parse` — no boot abort
+  - [x] Unit tests against an exploded resource directory
+  - [x] Unit tests against a real built jar (packaged fixture) — flagged in spec as highest platform-dependent risk; caught a real bug (see below)
 
 ## 5. Core: fallback resolution
 
