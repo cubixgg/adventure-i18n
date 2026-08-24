@@ -1,0 +1,27 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          # adventure-i18n-core/-json don't pin a toolchain (no repo-wide JDK decision yet, see
+          # CONTRIBUTING.md), but adventure-i18n-minestom-demo pins Java 25 for itself and is part
+          # of the same `./gradlew build` - keep this in sync with that module's build.gradle.kts.
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build
+        run: ./gradlew build

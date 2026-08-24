@@ -13,11 +13,13 @@ those.
 ## Status
 
 [`spec.md`](./docs/spec.md) is the complete design, [`roadmap.md`](./docs/roadmap.md) is the
-implementation checklist. Both modules' public APIs are implemented and tested through section 13
+implementation checklist. Both modules' public APIs are implemented and tested through section 14
 of the roadmap (locale discovery, fallback, color palette, `<prefix>` splicing, `KeyedTranslator`,
-`Messages`, `LangFileConsistency`, and the optional `JsonLangFileFormat`). Section 14 (Javadoc
-completeness, this README's quickstart, a versioning/publishing decision) is what's left before v1.
-Nothing is published to a repository yet, so this isn't usable as a dependency in another project.
+`Messages`, `LangFileConsistency`, and the optional `JsonLangFileFormat`) — every pre-v1 item is
+checked off, including the versioning/publishing decision (see
+[ADR-0005](./docs/decisions/0005-reposilite-release-please.md)). No release has actually been tagged
+yet, though (see [Deployment / publishing](#deployment--publishing)), so the usage example below is
+the target API, not something you can depend on today.
 
 ## Modules
 
@@ -35,8 +37,21 @@ for the full reasoning.
 
 ## Usage
 
-Not published yet, so there's no coordinate to depend on - but the shape below already works
-against this repository's current `adventure-i18n-core`. Setup is the same either way:
+Once a release is tagged (see [Deployment / publishing](#deployment--publishing)), add the
+[Reposilite](https://reposilite.com/) repository, then the module(s) you need:
+
+```kotlin
+repositories {
+    maven("https://maven.cubix.gg/public-releases")
+}
+
+dependencies {
+    implementation("gg.cubix.adventurei18n:adventure-i18n-core:<version>")
+    // implementation("gg.cubix.adventurei18n:adventure-i18n-json:<version>") // optional
+}
+```
+
+The shape below already works against this repository's current `adventure-i18n-core`:
 
 ```java
 Key namespace = Key.key("myproject", "i18n");
@@ -93,6 +108,15 @@ class in this library (see [ADR-0004](./docs/decisions/0004-no-custom-args-class
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the full workflow (roadmap-driven, one item per
 commit/PR) and [`CLAUDE.md`](./CLAUDE.md) for architecture rules.
+
+## Deployment / publishing
+
+- `adventure-i18n-core` + `adventure-i18n-json` publish to a self-hosted
+  [Reposilite](https://reposilite.com/) instance at `https://maven.cubix.gg/public-releases` — not
+  Maven Central, and not on every commit. [`release-please`](https://github.com/googleapis/release-please)
+  computes the version from Conventional Commits and opens a release PR; merging it is what triggers
+  the actual publish (`.github/workflows/release-please.yml`). See
+  [ADR-0005](./docs/decisions/0005-reposilite-release-please.md) for why.
 
 ## Contributing
 

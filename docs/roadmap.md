@@ -11,7 +11,7 @@ Implementation plan derived from [`spec.md`](spec.md). Check items off as they l
 - [x] `adventure-i18n-core` dependencies: `adventure-api`, `adventure-text-minimessage`, `slf4j-api` only — no JSON library, not even transitively
 - [x] `adventure-i18n-json` dependencies: `adventure-i18n-core` + Gson
 - [x] Decide package name (spec uses placeholder `yourorg.i18n`; current group id is `gg.cubix.adventurei18n`) and apply consistently across both modules — decided: `gg.cubix.adventurei18n` for core, `gg.cubix.adventurei18n.json` for the JSON add-on
-- [x] Set up publishing config (`maven-publish`) for both artifacts, since the goal is a standalone open-source library — `publishToMavenLocal` works for both; no remote repository target configured yet (Maven Central vs. self-hosted, see section 14)
+- [x] Set up publishing config (`maven-publish`) for both artifacts, since the goal is a standalone open-source library — `publishToMavenLocal` works for both; remote target is Reposilite, see section 14
 
 ## 2. Core: locale identifiers
 
@@ -127,7 +127,7 @@ Implemented alongside section 8 rather than after it: `KeyedTranslator`'s builde
 - [x] Package-level / class-level Javadoc for all public core classes (especially the escaping rules noted for `PropertiesLangFileFormat` and the caching warning on `LocaleSource`) — added `package-info.java` for both packages, filled in the remaining builder-method/factory Javadoc gaps found via an audit
 - [x] Top-level `README.md`: what the library is, quickstart (`ClasspathLangSource` + `KeyedTranslator.builder` + `Messages.install`), module split rationale
 - [x] Usage examples for both the client-locale path and the `LocaleSource`-managed path
-- [ ] Versioning/publishing decision (Maven Central / a repository) before tagging v1 — deliberately left open for now, consistent with the earlier call to hold off on release-please/CI (no target decided yet: neither Maven Central's Sonatype namespace/GPG signing setup, nor a self-hosted option, has been chosen)
+- [x] Versioning/publishing decision before tagging v1 — publishes `adventure-i18n-core`/`adventure-i18n-json` to a self-hosted Reposilite instance (`maven.cubix.gg`), versioned and released via `release-please` (`.github/workflows/release-please.yml`, `.github/workflows/build.yml` for CI); see [ADR-0005](./decisions/0005-reposilite-release-please.md)
 
 ## Explicitly out of scope for this roadmap (non-goals, per spec.md)
 
