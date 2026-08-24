@@ -110,10 +110,10 @@ Implemented alongside section 8 rather than after it: `KeyedTranslator`'s builde
 
 ## 12. Validation & cross-cutting testing
 
-- [ ] `LangFileConsistency` utility — asserts all discovered locales have the same key set as the fallback locale
-  - [ ] Usable as a plain JUnit assertion
-  - [ ] Usable as a Gradle task for consumer projects
-- [ ] End-to-end test: full `KeyedTranslator` built via builder, rendering a message through `Messages` with a real lang bundle
+- [x] `LangFileConsistency` utility — asserts all discovered locales have the same key set as the fallback locale
+  - [x] Usable as a plain JUnit assertion — `assertConsistent(...)` throws a plain `AssertionError`, no JUnit dependency in this artifact
+  - [x] Usable as a Gradle task for consumer projects — a plain Java utility (`check(...)` returns a `Report`), callable from a hand-written Gradle task; this library doesn't ship a Gradle plugin/task type itself
+- [x] End-to-end test: full `KeyedTranslator` built via builder, rendering a message through `Messages` with a real lang bundle
 
 ## 13. `adventure-i18n-json` add-on module
 
