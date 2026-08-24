@@ -93,9 +93,9 @@ Implemented alongside section 8 rather than after it: `KeyedTranslator`'s builde
 
 ## 10. Core: per-recipient locale override
 
-- [ ] `LocaleSource` interface — `Optional<Locale> localeOf(UUID recipientId)` (no `Player`/`Audience` dependency)
-- [ ] Class documentation: a `LocaleSource` that queries a database per message is a consumer bug, not a library concern — state this explicitly so it isn't built wrong
-- [ ] Unit tests with a stub `LocaleSource`
+- [x] `LocaleSource` interface — `Optional<Locale> localeOf(UUID recipientId)` (no `Player`/`Audience` dependency)
+- [x] Class documentation: a `LocaleSource` that queries a database per message is a consumer bug, not a library concern — state this explicitly so it isn't built wrong
+- [x] Unit tests with a stub `LocaleSource`
 
 ## 11. Core: install & render entry points
 
