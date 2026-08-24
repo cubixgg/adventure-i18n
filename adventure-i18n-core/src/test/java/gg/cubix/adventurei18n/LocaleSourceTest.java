@@ -20,10 +20,10 @@ class LocaleSourceTest {
     @Test
     void stubBackedByMapReturnsConfiguredLocale() {
         UUID recipient = UUID.randomUUID();
-        Map<UUID, Locale> cache = Map.of(recipient, Locale.GERMANY);
+        Map<UUID, Locale> cache = Map.of(recipient, Locale.of("no", "NO"));
         LocaleSource source = recipientId -> Optional.ofNullable(cache.get(recipientId));
 
-        assertEquals(Optional.of(Locale.GERMANY), source.localeOf(recipient));
+        assertEquals(Optional.of(Locale.of("no", "NO")), source.localeOf(recipient));
     }
 
     @Test

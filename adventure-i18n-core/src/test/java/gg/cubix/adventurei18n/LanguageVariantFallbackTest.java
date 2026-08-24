@@ -16,52 +16,52 @@ class LanguageVariantFallbackTest {
 
     @Test
     void exactLocaleWins() {
-        Locale deDe = Locale.of("de", "DE");
-        Set<Locale> available = Set.of(Locale.US, deDe);
+        Locale frFr = Locale.of("fr", "FR");
+        Set<Locale> available = Set.of(Locale.US, frFr);
 
-        Optional<Locale> resolved = strategy.resolve(deDe, Locale.US, available);
+        Optional<Locale> resolved = strategy.resolve(frFr, Locale.US, available);
 
-        assertEquals(Optional.of(deDe), resolved);
+        assertEquals(Optional.of(frFr), resolved);
     }
 
     @Test
     void regionalVariantOfSameLanguageWinsOverFallback() {
-        Locale deDe = Locale.of("de", "DE");
-        Locale deAt = Locale.of("de", "AT");
-        Set<Locale> available = Set.of(Locale.US, deDe);
+        Locale frFr = Locale.of("fr", "FR");
+        Locale frCa = Locale.of("fr", "CA");
+        Set<Locale> available = Set.of(Locale.US, frFr);
 
-        Optional<Locale> resolved = strategy.resolve(deAt, Locale.US, available);
+        Optional<Locale> resolved = strategy.resolve(frCa, Locale.US, available);
 
-        assertEquals(Optional.of(deDe), resolved);
+        assertEquals(Optional.of(frFr), resolved);
     }
 
     @Test
     void multipleVariantsResolveDeterministicallyByAlphabeticalId() {
-        Locale deAt = Locale.of("de", "AT");
-        Locale deDe = Locale.of("de", "DE");
-        Locale deCh = Locale.of("de", "CH");
-        Set<Locale> available = Set.of(Locale.US, deAt, deDe);
+        Locale frCa = Locale.of("fr", "CA");
+        Locale frFr = Locale.of("fr", "FR");
+        Locale frCh = Locale.of("fr", "CH");
+        Set<Locale> available = Set.of(Locale.US, frCa, frFr);
 
-        Optional<Locale> resolved = strategy.resolve(deCh, Locale.US, available);
+        Optional<Locale> resolved = strategy.resolve(frCh, Locale.US, available);
 
-        // "de_at" sorts before "de_de" - deterministic regardless of Set iteration order.
-        assertEquals(Optional.of(deAt), resolved);
+        // "fr_ca" sorts before "fr_fr" - deterministic regardless of Set iteration order.
+        assertEquals(Optional.of(frCa), resolved);
     }
 
     @Test
     void fallbackLocaleWinsWhenNoVariantAvailable() {
-        Set<Locale> available = Set.of(Locale.US, Locale.of("de", "DE"));
+        Set<Locale> available = Set.of(Locale.US, Locale.of("fr", "FR"));
 
-        Optional<Locale> resolved = strategy.resolve(Locale.FRANCE, Locale.US, available);
+        Optional<Locale> resolved = strategy.resolve(Locale.of("no", "NO"), Locale.US, available);
 
         assertEquals(Optional.of(Locale.US), resolved);
     }
 
     @Test
     void emptyWhenNothingMatchesNotEvenFallback() {
-        Set<Locale> available = Set.of(Locale.of("de", "DE"));
+        Set<Locale> available = Set.of(Locale.of("fr", "FR"));
 
-        Optional<Locale> resolved = strategy.resolve(Locale.FRANCE, Locale.US, available);
+        Optional<Locale> resolved = strategy.resolve(Locale.of("no", "NO"), Locale.US, available);
 
         assertTrue(resolved.isEmpty());
     }

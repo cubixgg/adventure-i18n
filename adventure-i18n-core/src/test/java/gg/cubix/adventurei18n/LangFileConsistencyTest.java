@@ -16,7 +16,7 @@ class LangFileConsistencyTest {
     void reportsNoIssuesForConsistentBundles() {
         Map<Locale, Map<String, String>> bundles = Map.of(
                 Locale.US, Map.of("greeting", "Hello", "farewell", "Bye"),
-                Locale.GERMANY, Map.of("greeting", "Hallo", "farewell", "Tschuss"));
+                Locale.of("no", "NO"), Map.of("greeting", "Hei", "farewell", "Ha det"));
 
         LangFileConsistency.Report report = LangFileConsistency.check(bundles, Locale.US);
 
@@ -29,12 +29,12 @@ class LangFileConsistencyTest {
     void reportsMissingKeyInNonFallbackLocale() {
         Map<Locale, Map<String, String>> bundles = Map.of(
                 Locale.US, Map.of("greeting", "Hello", "farewell", "Bye"),
-                Locale.GERMANY, Map.of("greeting", "Hallo"));
+                Locale.of("no", "NO"), Map.of("greeting", "Hei"));
 
         LangFileConsistency.Report report = LangFileConsistency.check(bundles, Locale.US);
 
-        assertTrue(report.missingKeys().containsKey(Locale.GERMANY));
-        assertEquals(Set.of("farewell"), report.missingKeys().get(Locale.GERMANY));
+        assertTrue(report.missingKeys().containsKey(Locale.of("no", "NO")));
+        assertEquals(Set.of("farewell"), report.missingKeys().get(Locale.of("no", "NO")));
         assertTrue(report.extraKeys().isEmpty());
         assertTrue(report.describe().contains("farewell"));
     }
@@ -43,17 +43,17 @@ class LangFileConsistencyTest {
     void reportsExtraKeyInNonFallbackLocale() {
         Map<Locale, Map<String, String>> bundles = Map.of(
                 Locale.US, Map.of("greeting", "Hello"),
-                Locale.GERMANY, Map.of("greeting", "Hallo", "orphaned", "Verwaist"));
+                Locale.of("no", "NO"), Map.of("greeting", "Hei", "orphaned", "Foreldrelos"));
 
         LangFileConsistency.Report report = LangFileConsistency.check(bundles, Locale.US);
 
         assertTrue(report.missingKeys().isEmpty());
-        assertEquals(Set.of("orphaned"), report.extraKeys().get(Locale.GERMANY));
+        assertEquals(Set.of("orphaned"), report.extraKeys().get(Locale.of("no", "NO")));
     }
 
     @Test
     void checkThrowsWhenFallbackBundleIsAbsent() {
-        Map<Locale, Map<String, String>> bundles = Map.of(Locale.GERMANY, Map.of("greeting", "Hallo"));
+        Map<Locale, Map<String, String>> bundles = Map.of(Locale.of("no", "NO"), Map.of("greeting", "Hei"));
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
                 () -> LangFileConsistency.check(bundles, Locale.US));
@@ -64,7 +64,7 @@ class LangFileConsistencyTest {
     void assertConsistentThrowsAssertionErrorWhenInconsistent() {
         Map<Locale, Map<String, String>> bundles = Map.of(
                 Locale.US, Map.of("greeting", "Hello"),
-                Locale.GERMANY, Map.of());
+                Locale.of("no", "NO"), Map.of());
 
         assertThrows(AssertionError.class, () -> LangFileConsistency.assertConsistent(bundles, Locale.US));
     }
@@ -73,7 +73,7 @@ class LangFileConsistencyTest {
     void assertConsistentDoesNotThrowWhenConsistent() {
         Map<Locale, Map<String, String>> bundles = Map.of(
                 Locale.US, Map.of("greeting", "Hello"),
-                Locale.GERMANY, Map.of("greeting", "Hallo"));
+                Locale.of("no", "NO"), Map.of("greeting", "Hei"));
 
         LangFileConsistency.assertConsistent(bundles, Locale.US);
     }

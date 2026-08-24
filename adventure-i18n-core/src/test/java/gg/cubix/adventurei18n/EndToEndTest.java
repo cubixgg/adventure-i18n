@@ -33,8 +33,8 @@ class EndToEndTest {
 
         Messages.install(translator);
         try {
-            Component german = Messages.render(Locale.GERMANY, "server.welcome", Argument.string("name", "World"));
-            assertEquals("[MeinServer] Willkommen, World!", MiniMessage.miniMessage().serialize(german));
+            Component norwegian = Messages.render(Locale.of("no", "NO"), "server.welcome", Argument.string("name", "World"));
+            assertEquals("[MinServer] Velkommen, World!", MiniMessage.miniMessage().serialize(norwegian));
 
             // French wasn't discovered at all - falls all the way back to the US bundle.
             Component french = Messages.render(Locale.FRANCE, "server.welcome", Argument.string("name", "World"));

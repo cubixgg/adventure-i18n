@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ClasspathLangSourceTest {
 
     /**
-     * src/test/resources/lang/ contains en_us.properties, de_de.properties, a stray README.md
+     * src/test/resources/lang/ contains en_us.properties, no_no.properties, a stray README.md
      * (wrong extension), notalocale.properties (right extension, but the identifier is too long
      * to be a valid locale id), and sub/ignored.properties (a subdirectory - scanning isn't
      * recursive). Gradle puts test resources on the test classpath as an exploded directory, so
@@ -36,7 +36,7 @@ class ClasspathLangSourceTest {
 
         assertEquals(2, bundles.size());
         assertEquals("Hello", bundles.get(Locale.of("en", "US")).get("greeting"));
-        assertEquals("Hallo", bundles.get(Locale.of("de", "DE")).get("greeting"));
+        assertEquals("Hei", bundles.get(Locale.of("no", "NO")).get("greeting"));
     }
 
     @Test

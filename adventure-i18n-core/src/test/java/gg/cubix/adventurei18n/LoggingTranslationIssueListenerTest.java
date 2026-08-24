@@ -23,15 +23,15 @@ class LoggingTranslationIssueListenerTest {
         listener.missingKey(NAMESPACE, "greeting", Locale.US);
         listener.missingKey(NAMESPACE, "greeting", Locale.US);
         listener.missingKey(NAMESPACE, "farewell", Locale.US);
-        listener.missingKey(NAMESPACE, "greeting", Locale.GERMANY);
+        listener.missingKey(NAMESPACE, "greeting", Locale.of("no", "NO"));
     }
 
     @Test
     void fallbackServedCanBeCalledRepeatedlyWithoutThrowing() {
         TranslationIssueListener listener = new LoggingTranslationIssueListener();
 
-        listener.fallbackServed(NAMESPACE, "greeting", Locale.of("de", "AT"), Locale.GERMANY);
-        listener.fallbackServed(NAMESPACE, "greeting", Locale.of("de", "AT"), Locale.GERMANY);
+        listener.fallbackServed(NAMESPACE, "greeting", Locale.of("nb", "NO"), Locale.of("no", "NO"));
+        listener.fallbackServed(NAMESPACE, "greeting", Locale.of("nb", "NO"), Locale.of("no", "NO"));
     }
 
     @Test
@@ -41,6 +41,6 @@ class LoggingTranslationIssueListenerTest {
 
         logging.missingKey(NAMESPACE, "greeting", Locale.US);
         noop.missingKey(NAMESPACE, "greeting", Locale.US);
-        noop.fallbackServed(NAMESPACE, "greeting", Locale.US, Locale.GERMANY);
+        noop.fallbackServed(NAMESPACE, "greeting", Locale.US, Locale.of("no", "NO"));
     }
 }

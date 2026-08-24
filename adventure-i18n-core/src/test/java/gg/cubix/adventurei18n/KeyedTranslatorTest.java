@@ -47,7 +47,7 @@ class KeyedTranslatorTest {
 
     @Test
     void buildFailsFastWhenFallbackLocaleNotDiscovered() {
-        LangSource source = () -> Map.of(Locale.GERMANY, Map.of("greeting", "Hallo"));
+        LangSource source = () -> Map.of(Locale.of("no", "NO"), Map.of("greeting", "Hei"));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class,
                 () -> KeyedTranslator.builder(NAMESPACE).source(source).fallback(Locale.US).build());
@@ -59,26 +59,26 @@ class KeyedTranslatorTest {
     void resolvesExactLocale() {
         KeyedTranslator translator = translatorWith(Map.of(
                 Locale.US, Map.of("greeting", "Hello"),
-                Locale.GERMANY, Map.of("greeting", "Hallo")));
+                Locale.of("no", "NO"), Map.of("greeting", "Hei")));
 
         assertEquals("Hello", translator.getMiniMessageString("greeting", Locale.US));
-        assertEquals("Hallo", translator.getMiniMessageString("greeting", Locale.GERMANY));
+        assertEquals("Hei", translator.getMiniMessageString("greeting", Locale.of("no", "NO")));
     }
 
     @Test
     void fallsBackToRegionalVariant() {
         KeyedTranslator translator = translatorWith(Map.of(
                 Locale.US, Map.of("greeting", "Hello"),
-                Locale.GERMANY, Map.of("greeting", "Hallo")));
+                Locale.FRANCE, Map.of("greeting", "Bonjour")));
 
-        assertEquals("Hallo", translator.getMiniMessageString("greeting", Locale.of("de", "AT")));
+        assertEquals("Bonjour", translator.getMiniMessageString("greeting", Locale.of("fr", "CA")));
     }
 
     @Test
     void fallsBackToFallbackLocaleWhenNoVariantAvailable() {
         KeyedTranslator translator = translatorWith(Map.of(Locale.US, Map.of("greeting", "Hello")));
 
-        assertEquals("Hello", translator.getMiniMessageString("greeting", Locale.FRANCE));
+        assertEquals("Hello", translator.getMiniMessageString("greeting", Locale.of("no", "NO")));
     }
 
     @Test
@@ -166,7 +166,7 @@ class KeyedTranslatorTest {
         RecordingIssueListener issues = new RecordingIssueListener();
         LangSource source = () -> Map.of(
                 Locale.US, Map.of("greeting", "Hello"),
-                Locale.GERMANY, Map.of("greeting", "Hallo"));
+                Locale.FRANCE, Map.of("greeting", "Bonjour"));
 
         KeyedTranslator translator = KeyedTranslator.builder(NAMESPACE)
                 .source(source)
@@ -178,9 +178,9 @@ class KeyedTranslatorTest {
         assertTrue(issues.missingKeys.isEmpty());
         assertTrue(issues.fallbacksServed.isEmpty());
 
-        Locale deAt = Locale.of("de", "AT");
-        assertEquals("Hallo", translator.getMiniMessageString("greeting", deAt));
-        assertEquals(List.of(new FallbackServed("greeting", deAt, Locale.GERMANY)), issues.fallbacksServed);
+        Locale frCa = Locale.of("fr", "CA");
+        assertEquals("Bonjour", translator.getMiniMessageString("greeting", frCa));
+        assertEquals(List.of(new FallbackServed("greeting", frCa, Locale.FRANCE)), issues.fallbacksServed);
 
         assertNull(translator.getMiniMessageString("does.not.exist", Locale.US));
         assertEquals(List.of(new MissingKey("does.not.exist", Locale.US)), issues.missingKeys);

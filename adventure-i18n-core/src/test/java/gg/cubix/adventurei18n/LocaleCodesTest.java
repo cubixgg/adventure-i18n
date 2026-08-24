@@ -24,12 +24,12 @@ class LocaleCodesTest {
 
     @Test
     void parseAcceptsHyphenSeparator() {
-        assertEquals(Locale.of("de", "DE"), LocaleCodes.parse("de-DE"));
+        assertEquals(Locale.of("no", "NO"), LocaleCodes.parse("no-NO"));
     }
 
     @Test
     void parseNormalizesCase() {
-        assertEquals(Locale.of("de", "DE"), LocaleCodes.parse("DE_de"));
+        assertEquals(Locale.of("no", "NO"), LocaleCodes.parse("NO_no"));
     }
 
     @Test
@@ -73,7 +73,7 @@ class LocaleCodesTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"en_us", "de_de", "pt_br", "en"})
+    @ValueSource(strings = {"en_us", "no_no", "pt_br", "en"})
     void idOfParseRoundTripsCanonicalIds(String id) {
         assertEquals(id, LocaleCodes.id(LocaleCodes.parse(id)));
     }
